@@ -14,7 +14,6 @@ commands = {
 
 
 def SendMail():
-  #server.connect()
   destination = input("Enter the email you want to send this to: ") #todo: save contacts
   message = input("What would you like to say? ") #todo: allow markdown 
   server.sendmail(
@@ -22,7 +21,6 @@ def SendMail():
     destination,
     message
   )
-  #server.quit()
 
 while 1: # need to figure out how to allow my password ot be saved 
     username = input("Enter Username: ") 
@@ -34,11 +32,10 @@ while 1: # need to figure out how to allow my password ot be saved
       print("Either your username or password is incorrect please try again  make sure to disable secure connection  https://myaccount.google.com/lesssecureapps?pli=1&rapt=AEjHL4NmLq2JKrgRmgzTtfbkoStaMUeFNvhUpioaAEd3fLzZCUBkFNTMyAJs7rNCFi2YwBRTM7nnCj9J8Vkfn0nv3YhCPD3pKw")
       # I need to figure out how to be able to login without making it less secure 
 
-
 while 1:
   task = input(": ").upper()
   if task in commands:
-    exec(commands[task])
+    exec(commands[task]) 
   if task == "S":
     SendMail()
   else:
