@@ -1,17 +1,6 @@
 import smtplib 
 import os
-
-server = smtplib.SMTP_SSL('smtp.gmail.com', 465)
-settings = [] # todo: save settings and make settings in a json files 
-username = ""
-password = ""
-counter = 0
-commands = {
-   "Q":"exit()",
-   "H":"print(commands)", 
-   "C":"os.system('clear')", 
-}
-
+import imaplib
 
 def SendMail():
   destination = input("Enter the email you want to send this to: ") #todo: save contacts
@@ -22,22 +11,41 @@ def SendMail():
     message
   )
 
+def clear():
+  if os.name == "posix":
+    os.system("clear")
+  if os.name == "nt":
+    os.system("cls")
+
+mail_server = 'imap.gmail.com'
+imap_server = imaplib.IMAP4_SSL(host=mail_server)
+server = smtplib.SMTP_SSL('smtp.gmail.com', 465)
+username = ""
+password = ""
+commands = {
+   "Q":"exit()",
+   "H":"print(commands)", 
+   "C":"clear()" # todo: fix clear error
+}
+
 while 1: # need to figure out how to allow my password ot be saved 
     username = input("Enter Username: ") 
     password = input("Enter password: ")
     try:
       server.login(username, password)
+      imap_server.login(username, password)
       break 
     except(smtplib.SMTPAuthenticationError):
-      print("Either your username or password is incorrect please try again  make sure to disable secure connection  https://myaccount.google.com/lesssecureapps?pli=1&rapt=AEjHL4NmLq2JKrgRmgzTtfbkoStaMUeFNvhUpioaAEd3fLzZCUBkFNTMyAJs7rNCFi2YwBRTM7nnCj9J8Vkfn0nv3YhCPD3pKw")
+      print("Either your username or password is incorrect please try again")
       # I need to figure out how to be able to login without making it less secure 
 
 while 1:
   task = input(": ").upper()
   if task in commands:
     exec(commands[task]) 
-  if task == "S":
+  elif task == "S":
     SendMail()
   else:
     print('Input invalid, type "HELP" too see the list of commands.')
     # todo: I need to make a way to view emails
+   
