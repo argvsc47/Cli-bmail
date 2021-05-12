@@ -3,6 +3,10 @@ import os
 import imaplib
 import stdiomask
 
+def loadContacts(filename):
+  with open(filename, 'w') as file:
+    return eval(file.read())
+  
 def ListInbox():
   imap_server.select()
   _, message_numbers_raw = imap_server.search(None, 'ALL')
@@ -11,8 +15,12 @@ def ListInbox():
       print(msg[0][1])
 
 
-def SendMail():
+def SendMail(contacts):
   destination = input("Enter the email you want to send this to: ") #todo: save contacts
+  if destination in contacts:
+    destination = contacts[destination]
+  else:
+    print("ERROR: Could not find that person in your contact list")
   message = input("What would you like to say? ") #todo: allow markdown 
   try:
     server.sendmail(
@@ -29,6 +37,7 @@ def clear():
   if os.name == "nt":
     os.system("cls")
 
+contacts = loadContacts('contacts.json')
 mail_server = 'imap.gmail.com'
 imap_server = imaplib.IMAP4_SSL(host=mail_server)
 server = smtplib.SMTP_SSL('smtp.gmail.com', 465)
@@ -38,7 +47,7 @@ commands = {
    "Q":exit,
    "H":lambda : print(commands), 
    "C":clear, 
-   "S":SendMail,
+   "S":lambda : SendMail(contacts),
    "L":ListInbox
 }
 
