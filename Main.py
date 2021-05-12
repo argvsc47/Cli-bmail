@@ -36,7 +36,7 @@ password = ""
 commands = {
    "Q":"exit()",
    "H":"print(commands)", 
-   "C":"clear()", # todo: fix clear error
+   "C":"clear()", 
    "S":"SendMail()",
    "L":"ListInbox()"
 }
