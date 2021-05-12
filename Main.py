@@ -2,14 +2,25 @@ import smtplib
 import os
 import imaplib
 
+def ListInbox():
+  imap_server.select()
+  _, message_numbers_raw = imap_server.search(None, 'ALL')
+  for message_number in message_numbers_raw[0].split():
+      _, msg = imap_server.fetch(message_number, '(RFC822)')
+      print(msg[0][1])
+
+
 def SendMail():
   destination = input("Enter the email you want to send this to: ") #todo: save contacts
   message = input("What would you like to say? ") #todo: allow markdown 
-  server.sendmail(
-    username,
-    destination,
-    message
+  try:
+    server.sendmail(
+      username,
+      destination,
+      message
   )
+  except(smtplib.SMTPRecipientsRefused):
+    print("ERROR: Can not contact that person")
 
 def clear():
   if os.name == "posix":
@@ -25,7 +36,9 @@ password = ""
 commands = {
    "Q":"exit()",
    "H":"print(commands)", 
-   "C":"clear()" # todo: fix clear error
+   "C":"clear()", # todo: fix clear error
+   "S":"SendMail()",
+   "L":"ListInbox()"
 }
 
 while 1: # need to figure out how to allow my password ot be saved 
@@ -43,9 +56,6 @@ while 1:
   task = input(": ").upper()
   if task in commands:
     exec(commands[task]) 
-  elif task == "S":
-    SendMail()
   else:
     print('Input invalid, type "HELP" too see the list of commands.')
-    # todo: I need to make a way to view emails
-   
+    # todo: I need to make a way to view emails and save contacts
