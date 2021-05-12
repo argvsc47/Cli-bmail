@@ -35,14 +35,14 @@ server = smtplib.SMTP_SSL('smtp.gmail.com', 465)
 username = ""
 password = ""
 commands = {
-   "Q":"exit()",
-   "H":"print(commands)", 
-   "C":"clear()", 
-   "S":"SendMail()",
-   "L":"ListInbox()"
+   "Q":exit,
+   "H":lambda : print(commands), 
+   "C":clear, 
+   "S":SendMail,
+   "L":ListInbox
 }
 
-while 1: # need to figure out how to allow my password ot be saved 
+while 1: # need to figure out how to allow my password not be saved 
     username = input("Enter Username: ") 
     password = stdiomask.getpass(prompt=': ', mask='*') 
     try:
@@ -56,7 +56,7 @@ while 1: # need to figure out how to allow my password ot be saved
 while 1:
   task = input(": ").upper()
   if task in commands:
-    exec(commands[task]) 
+    commands[task]() 
   else:
     print('Input invalid, type "HELP" too see the list of commands.')
     # todo: I need to make a way to view emails and save contacts
