@@ -1,6 +1,7 @@
 import smtplib 
 import os
 import imaplib
+import stdiomask
 
 def ListInbox():
   imap_server.select()
@@ -18,7 +19,7 @@ def SendMail():
       username,
       destination,
       message
-  )
+    )
   except(smtplib.SMTPRecipientsRefused):
     print("ERROR: Can not contact that person")
 
@@ -43,7 +44,7 @@ commands = {
 
 while 1: # need to figure out how to allow my password ot be saved 
     username = input("Enter Username: ") 
-    password = input("Enter password: ")
+    password = stdiomask.getpass(prompt=': ', mask='*') 
     try:
       server.login(username, password)
       imap_server.login(username, password)
